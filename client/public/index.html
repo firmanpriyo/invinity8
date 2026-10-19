@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #cart-panel {
+            background: #fff;
+            border-left: 1px solid #ddd;
+            height: 100vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Layar Login -->
+    <div id="login-screen" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="text-center mb-4">Sistem Kasir (POS)</h4>
+                        <input type="text" id="username" class="form-control mb-3" placeholder="Username">
+                        <input type="password" id="password" class="form-control mb-3" placeholder="Password">
+                        <button class="btn btn-primary w-100" onclick="handleLogin()">Masuk</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layar Utama Kasir -->
+    <div id="main-screen" class="container-fluid hidden">
+        <div class="row">
+            <!-- Daftar Produk -->
+            <div class="col-md-8 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Kasir: <span id="active-user" class="text-primary"></span></h4>
+                    <span id="role-badge" class="badge bg-secondary fs-6"></span>
+                </div>
+                <div class="row" id="product-list">
+                    <div class="text-center">Memuat produk...</div>
+                </div>
+            </div>
+            <!-- Panel Keranjang -->
+            <div class="col-md-4 p-4 shadow-sm" id="cart-panel">
+                <h4>Keranjang</h4>
+                <ul class="list-group mb-3" id="cart-items"></ul>
+                <h3 class="text-end text-danger mb-4">Rp <span id="grand-total">0</span></h3>
+                <button class="btn btn-success w-100 mb-2" onclick="checkout()">Proses Pembayaran</button>
+                <button class="btn btn-outline-danger w-100" onclick="logout()">Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = {};
+        let products = [];
+        let cart = [];
+
+        function handleLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            google.script.run.withSuccessHandler(res => {
+                if (res.success) {
+                    currentUser = res;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('main-screen').classList.remove('hidden');
+                    document.getElementById('active-user').innerText = res.username;
+                    document.getElementById('role-badge').innerText = res.role;
+                    loadProducts();
+                } else {
+                    alert(res.message);
+                }
+            }).loginUser(u, p);
+        }
+
+        function loadProducts() {
+            google.script.run.withSuccessHandler(data => {
+                products = data;
+                renderProducts();
+            }).getProducts();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '';
+            products.forEach(p => {
+                container.innerHTML += `
+          <div class="col-6 col-md-4 col-lg-3 mb-3">
+            <div class="card h-100 shadow-sm" onclick="addToCart(${p.row})" style="cursor:pointer">
+              <div class="card-body text-center p-2">
+                <h6 class="card-title text-truncate">${p.name}</h6>
+                <small class="text-muted">Stok: ${p.stock}</small><br>
+                <strong class="text-success">Rp ${p.price.toLocaleString('id-ID')}</strong>
+              </div>
+            </div>
+          </div>
+        `;
+            });
+        }
+
+        function addToCart(row) {
+            const prod = products.find(p => p.row === row);
+            if (prod.stock <= 0) return alert('Stok Habis!');
+
+            const exist = cart.find(c => c.row === row);
+            if (exist) {
+                if (exist.qty >= prod.stock) return alert('Stok tidak mencukupi!');
+                exist.qty++;
+            } else {
+                cart.push({ ...prod, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cart-items');
+            let total = 0;
+            list.innerHTML = '';
+
+            cart.forEach((c, index) => {
+                let subtotal = c.price * c.qty;
+                total += subtotal;
+                list.innerHTML += `
+          <li class="list-group-item d-flex justify-content-between p-2">
+            <div>
+              <strong>${c.name}</strong><br>
+              <small>${c.qty} x ${c.price.toLocaleString('id-ID')}</small>
+            </div>
+            <div class="text-end">
+              <span class="d-block">Rp ${subtotal.toLocaleString('id-ID')}</span>
+              <button class="btn btn-sm btn-danger mt-1 py-0 px-2" onclick="cart.splice(${index}, 1); renderCart()">x</button>
+            </div>
+          </li>
+        `;
+            });
+            document.getElementById('grand-total').innerText = total.toLocaleString('id-ID');
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('Keranjang kosong!');
+            const total = parseInt(document.getElementById('grand-total').innerText.replace(/\./g, ''));
+
+            document.getElementById('cart-panel').style.opacity = '0.5';
+            google.script.run.withSuccessHandler(res => {
+                alert('Transaksi Berhasil! ID: ' + res.trxId);
+                cart = [];
+                renderCart();
+                loadProducts(); // Refresh stok real-time dari Spreadsheet
+                document.getElementById('cart-panel').style.opacity = '1';
+            }).processTransaction(cart, currentUser.username, total);
+        }
+
+        function logout() { location.reload(); }
+    </script>
+</body>
+
+</html>
