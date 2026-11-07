@@ -6,6 +6,10 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --login-background-image: url("https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2000&q=85");
+        }
+
         body {
             background-color: #f4f6f9;
         }
@@ -14,29 +18,224 @@
             display: none !important;
         }
 
+        .login-screen {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding: 48px max(7vw, 24px);
+            overflow: hidden;
+            isolation: isolate;
+            background-color: #17231f;
+            background-image:
+                linear-gradient(90deg, rgba(13, 29, 25, .84) 0%, rgba(13, 29, 25, .66) 48%, rgba(13, 29, 25, .3) 100%),
+                var(--login-background-image);
+            background-position: center;
+            background-size: cover;
+        }
+
+        .login-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+            align-items: center;
+            gap: clamp(40px, 8vw, 120px);
+            width: min(1120px, 100%);
+            margin: 0 auto;
+        }
+
+        .login-intro {
+            max-width: 560px;
+            color: #fff;
+        }
+
+        .login-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: clamp(72px, 13vh, 132px);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: .04em;
+        }
+
+        .login-brand-mark {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .55);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .14);
+            font-size: 20px;
+        }
+
+        .login-eyebrow,
+        .login-card-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .18em;
+        }
+
+        .login-eyebrow {
+            margin-bottom: 18px;
+            color: #c3d6c9;
+        }
+
+        .login-intro h1 {
+            max-width: 540px;
+            margin-bottom: 20px;
+            font-size: clamp(38px, 5vw, 64px);
+            font-weight: 700;
+            letter-spacing: -.045em;
+            line-height: 1.08;
+        }
+
+        .login-intro-copy {
+            max-width: 440px;
+            margin: 0;
+            color: rgba(255, 255, 255, .78);
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .login-card {
+            padding: clamp(30px, 4vw, 46px);
+            border: 1px solid rgba(255, 255, 255, .6);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, .96);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, .24);
+        }
+
+        .login-card-eyebrow {
+            margin-bottom: 10px;
+            color: #53735e;
+        }
+
+        .login-card h2 {
+            margin-bottom: 8px;
+            color: #1d2b24;
+            font-size: 29px;
+            font-weight: 700;
+            letter-spacing: -.03em;
+        }
+
+        .login-card-copy {
+            margin-bottom: 28px;
+            color: #738078;
+            font-size: 14px;
+        }
+
+        .login-label {
+            margin-bottom: 8px;
+            color: #34443a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .login-input {
+            min-height: 50px;
+            margin-bottom: 18px;
+            border-color: #e1e8e2;
+            border-radius: 10px;
+            background-color: #fbfcfb;
+        }
+
+        .login-input:focus {
+            border-color: #5a8066;
+            box-shadow: 0 0 0 .2rem rgba(69, 112, 80, .14);
+        }
+
+        .login-button {
+            min-height: 50px;
+            margin-top: 6px;
+            border: 0;
+            border-radius: 10px;
+            background: #315d40;
+            font-weight: 600;
+            transition: background-color .2s ease, transform .2s ease;
+        }
+
+        .login-button:hover {
+            background: #254a32;
+            transform: translateY(-1px);
+        }
+
+        .login-footer {
+            margin: 22px 0 0;
+            color: #89948c;
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
         #cart-panel {
             background: #fff;
             border-left: 1px solid #ddd;
             height: 100vh;
             overflow-y: auto;
         }
+
+        @media (max-width: 767.98px) {
+            .login-screen {
+                padding: 32px 20px;
+                background-image:
+                    linear-gradient(180deg, rgba(13, 29, 25, .72), rgba(13, 29, 25, .84)),
+                    var(--login-background-image);
+            }
+
+            .login-content {
+                grid-template-columns: 1fr;
+                gap: 28px;
+                max-width: 460px;
+            }
+
+            .login-brand {
+                margin-bottom: 28px;
+            }
+
+            .login-intro h1 {
+                font-size: clamp(34px, 10vw, 46px);
+            }
+
+            .login-intro-copy {
+                font-size: 15px;
+            }
+
+            .login-card {
+                padding: 28px 24px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Layar Login -->
-    <div id="login-screen" class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h4 class="text-center mb-4">Sistem Kasir (POS)</h4>
-                        <input type="text" id="username" class="form-control mb-3" placeholder="Username">
-                        <input type="password" id="password" class="form-control mb-3" placeholder="Password">
-                        <button class="btn btn-primary w-100" onclick="handleLogin()">Masuk</button>
-                    </div>
+    <div id="login-screen" class="login-screen">
+        <div class="login-content">
+            <section class="login-intro" aria-label="Informasi sistem kasir">
+                <div class="login-brand">
+                    <span class="login-brand-mark" aria-hidden="true">I</span>
+                    <span>INVINITY POS</span>
                 </div>
-            </div>
+
+                <p class="login-eyebrow">LEBIH RAPI, LEBIH MUDAH</p>
+                <h1>Semua urusan toko, dalam satu tempat.</h1>
+                <p class="login-intro-copy">Kelola produk, pantau stok, dan proses transaksi harian dengan nyaman.</p>
+            </section>
+
+            <section class="login-card" aria-labelledby="login-title">
+                <p class="login-card-eyebrow">SELAMAT DATANG KEMBALI</p>
+                <h2 id="login-title">Masuk ke akun Anda</h2>
+                <p class="login-card-copy">Masukkan username dan password untuk melanjutkan.</p>
+                <form onsubmit="event.preventDefault(); handleLogin();">
+                    <label class="form-label login-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-control login-input" placeholder="Masukkan username" autocomplete="username">
+                    <label class="form-label login-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control login-input" placeholder="Masukkan password" autocomplete="current-password">
+                    <button class="btn btn-primary login-button w-100" type="submit">Masuk</button>
+                </form>
+                <p class="login-footer">Sistem Kasir (POS) &middot; Akses khusus pengguna terdaftar</p>
+            </section>
         </div>
     </div>
 
