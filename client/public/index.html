@@ -314,9 +314,11 @@
                 <p class="login-card-copy">Masukkan username dan password untuk melanjutkan.</p>
                 <form onsubmit="event.preventDefault(); handleLogin();">
                     <label class="form-label login-label" for="username">Username</label>
-                    <input type="text" id="username" class="form-control login-input" placeholder="Masukkan username" autocomplete="username">
+                    <input type="text" id="username" class="form-control login-input" placeholder="Masukkan username"
+                        autocomplete="username">
                     <label class="form-label login-label" for="password">Password</label>
-                    <input type="password" id="password" class="form-control login-input" placeholder="Masukkan password" autocomplete="current-password">
+                    <input type="password" id="password" class="form-control login-input"
+                        placeholder="Masukkan password" autocomplete="current-password">
                     <button class="btn btn-primary login-button w-100" type="submit">Masuk</button>
                 </form>
                 <p class="login-footer">Sistem Kasir (POS) &middot; Akses khusus pengguna terdaftar</p>
@@ -328,8 +330,10 @@
     <div id="main-screen" class="hidden">
         <header class="app-header">
             <nav class="app-nav" aria-label="Navigasi utama">
-                <button id="cashier-nav" type="button" class="app-nav-button active" onclick="showAppView('cashier')">Kasir</button>
-                <button id="gallery-nav" type="button" class="app-nav-button" onclick="showAppView('gallery')">Galeri Produk</button>
+                <button id="cashier-nav" type="button" class="app-nav-button active"
+                    onclick="showAppView('cashier')">Kasir</button>
+                <button id="gallery-nav" type="button" class="app-nav-button" onclick="showAppView('gallery')">Galeri
+                    Produk</button>
             </nav>
             <div class="app-user">
                 <strong id="active-user"></strong>
@@ -343,7 +347,8 @@
                 <div class="col-md-8 p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Daftar Produk</h4>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="showAppView('gallery')">Lihat Galeri</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="showAppView('gallery')">Lihat
+                            Galeri</button>
                     </div>
                     <div class="row" id="product-list">
                         <div class="text-center">Memuat produk...</div>
@@ -392,14 +397,18 @@
                         </select>
                         <div id="cash-payment-fields">
                             <label class="form-label" for="amount-received">Uang diterima</label>
-                            <input type="number" id="amount-received" class="form-control" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal uang" required oninput="updateChange()">
+                            <input type="number" id="amount-received" class="form-control" min="0" step="1"
+                                inputmode="numeric" placeholder="Masukkan nominal uang" required
+                                oninput="updateChange()">
                             <p class="mt-3 mb-0">Kembalian: <strong>Rp <span id="payment-change">0</span></strong></p>
                         </div>
-                        <p id="non-cash-note" class="small text-muted mb-0 hidden">Pastikan pembayaran sudah diterima sebelum mengonfirmasi transaksi.</p>
+                        <p id="non-cash-note" class="small text-muted mb-0 hidden">Pastikan pembayaran sudah diterima
+                            sebelum mengonfirmasi transaksi.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" id="confirm-payment" class="btn btn-success">Konfirmasi pembayaran</button>
+                        <button type="submit" id="confirm-payment" class="btn btn-success">Konfirmasi
+                            pembayaran</button>
                     </div>
                 </form>
             </div>

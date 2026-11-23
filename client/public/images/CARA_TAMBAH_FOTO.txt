@@ -1,7 +1,0 @@
-Cara menambahkan foto produk:
-1. Simpan foto produk langsung di folder ini (client/public/images).
-2. Gunakan nama file sederhana, misalnya kopi.jpg atau nasi-goreng.png.
-3. Isi kolom G pada sheet Products dengan nama file saja, tanpa https atau folder.
-4. Jangan gunakan spasi khusus; huruf, angka, spasi, titik, dan tanda hubung sudah didukung.
-
-Contoh isi kolom G: kopi.jpg
