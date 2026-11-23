@@ -6,10 +6,6 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --login-background-image: url("https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2000&q=85");
-        }
-
         body {
             background-color: #f4f6f9;
         }
@@ -28,8 +24,7 @@
             isolation: isolate;
             background-color: #17231f;
             background-image:
-                linear-gradient(90deg, rgba(13, 29, 25, .84) 0%, rgba(13, 29, 25, .66) 48%, rgba(13, 29, 25, .3) 100%),
-                var(--login-background-image);
+                linear-gradient(135deg, rgba(13, 29, 25, .96), rgba(49, 93, 64, .88));
             background-position: center;
             background-size: cover;
         }
@@ -175,12 +170,102 @@
             overflow-y: auto;
         }
 
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e3e8e4;
+            background: #fff;
+        }
+
+        .app-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .app-nav-button {
+            border: 0;
+            border-radius: 9px;
+            background: transparent;
+            color: #667269;
+            padding: 9px 14px;
+            font-weight: 600;
+        }
+
+        .app-nav-button.active {
+            background: #eaf2ec;
+            color: #315d40;
+        }
+
+        .app-user {
+            margin-left: auto;
+        }
+
+        .app-view {
+            min-height: calc(100vh - 67px);
+        }
+
+        .product-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+            background: #edf1ee;
+        }
+
+        .product-photo-placeholder {
+            display: grid;
+            width: 100%;
+            height: 150px;
+            place-items: center;
+            border-radius: 8px 8px 0 0;
+            background: #edf1ee;
+            color: #90a096;
+            font-size: 34px;
+        }
+
+        .gallery-card {
+            overflow: hidden;
+            border: 1px solid #e3e8e4;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 18px rgba(38, 61, 47, .06);
+        }
+
+        .gallery-card .product-photo,
+        .gallery-card .product-photo-placeholder {
+            height: 220px;
+            border-radius: 0;
+        }
+
+        .gallery-card-body {
+            padding: 14px;
+        }
+
+        @media (max-width: 767.98px) {
+            #cart-panel {
+                height: auto;
+                border-left: 0;
+                border-top: 1px solid #ddd;
+            }
+
+            .app-header {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .app-user {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+
         @media (max-width: 767.98px) {
             .login-screen {
                 padding: 32px 20px;
                 background-image:
-                    linear-gradient(180deg, rgba(13, 29, 25, .72), rgba(13, 29, 25, .84)),
-                    var(--login-background-image);
+                    linear-gradient(180deg, rgba(13, 29, 25, .94), rgba(49, 93, 64, .88));
             }
 
             .login-content {
@@ -240,27 +325,53 @@
     </div>
 
     <!-- Layar Utama Kasir -->
-    <div id="main-screen" class="container-fluid hidden">
-        <div class="row">
-            <!-- Daftar Produk -->
-            <div class="col-md-8 p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4>Kasir: <span id="active-user" class="text-primary"></span></h4>
-                    <span id="role-badge" class="badge bg-secondary fs-6"></span>
+    <div id="main-screen" class="hidden">
+        <header class="app-header">
+            <nav class="app-nav" aria-label="Navigasi utama">
+                <button id="cashier-nav" type="button" class="app-nav-button active" onclick="showAppView('cashier')">Kasir</button>
+                <button id="gallery-nav" type="button" class="app-nav-button" onclick="showAppView('gallery')">Galeri Produk</button>
+            </nav>
+            <div class="app-user">
+                <strong id="active-user"></strong>
+                <span id="role-badge" class="badge bg-secondary ms-2"></span>
+            </div>
+        </header>
+
+        <main id="cashier-view" class="app-view">
+            <div class="row g-0">
+                <!-- Daftar Produk -->
+                <div class="col-md-8 p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Daftar Produk</h4>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="showAppView('gallery')">Lihat Galeri</button>
+                    </div>
+                    <div class="row" id="product-list">
+                        <div class="text-center">Memuat produk...</div>
+                    </div>
                 </div>
-                <div class="row" id="product-list">
-                    <div class="text-center">Memuat produk...</div>
+                <!-- Panel Keranjang -->
+                <div class="col-md-4 p-4 shadow-sm" id="cart-panel">
+                    <h4>Keranjang</h4>
+                    <ul class="list-group mb-3" id="cart-items"></ul>
+                    <h3 class="text-end text-danger mb-4">Rp <span id="grand-total">0</span></h3>
+                    <button class="btn btn-success w-100 mb-2" onclick="checkout()">Proses Pembayaran</button>
+                    <button class="btn btn-outline-danger w-100" onclick="logout()">Keluar</button>
                 </div>
             </div>
-            <!-- Panel Keranjang -->
-            <div class="col-md-4 p-4 shadow-sm" id="cart-panel">
-                <h4>Keranjang</h4>
-                <ul class="list-group mb-3" id="cart-items"></ul>
-                <h3 class="text-end text-danger mb-4">Rp <span id="grand-total">0</span></h3>
-                <button class="btn btn-success w-100 mb-2" onclick="checkout()">Proses Pembayaran</button>
-                <button class="btn btn-outline-danger w-100" onclick="logout()">Keluar</button>
+        </main>
+
+        <main id="gallery-view" class="app-view hidden p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <p class="text-uppercase small text-success fw-bold mb-1">Katalog Visual</p>
+                    <h3 class="mb-0">Galeri Produk</h3>
+                </div>
+                <button class="btn btn-outline-secondary" onclick="showAppView('cashier')">Kembali ke Kasir</button>
             </div>
-        </div>
+            <div class="row" id="gallery-list">
+                <div class="text-center">Memuat galeri...</div>
+            </div>
+        </main>
     </div>
 
     <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="payment-title" aria-hidden="true">
@@ -334,15 +445,71 @@
             const container = document.getElementById('product-list');
             container.innerHTML = '';
             products.forEach(p => {
+                const photo = getProductPhoto(p);
                 container.innerHTML += `
           <div class="col-6 col-md-4 col-lg-3 mb-3">
             <div class="card h-100 shadow-sm" onclick="addToCart(${p.row})" style="cursor:pointer">
+              ${photo}
               <div class="card-body text-center p-2">
                 <h6 class="card-title text-truncate">${p.name}</h6>
                 <small class="text-muted">Stok: ${p.stock}</small><br>
                 <strong class="text-success">Rp ${p.price.toLocaleString('id-ID')}</strong>
               </div>
             </div>
+          </div>
+        `;
+            });
+            renderGallery();
+        }
+
+        function getProductPhoto(product) {
+            const fileName = typeof product.image === 'string'
+                ? product.image.trim().replace(/^.*[\\/]/, '')
+                : '';
+            if (/^[a-zA-Z0-9._ -]+\.(jpg|jpeg|png|webp|gif)$/i.test(fileName)) {
+                return `<img class="product-photo" src="images/${escapeHtml(fileName)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;product-photo-placeholder&quot; aria-label=&quot;Foto tidak ditemukan&quot;>Tidak ada foto</div>'">`;
+            }
+            return '<div class="product-photo-placeholder" aria-label="Foto produk belum tersedia">Tidak ada foto</div>';
+        }
+
+        function escapeHtml(value) {
+            const element = document.createElement('div');
+            element.textContent = value == null ? '' : String(value);
+            return element.innerHTML;
+        }
+
+        function showAppView(view) {
+            const isCashier = view === 'cashier';
+            document.getElementById('cashier-view').classList.toggle('hidden', !isCashier);
+            document.getElementById('gallery-view').classList.toggle('hidden', isCashier);
+            document.getElementById('cashier-nav').classList.toggle('active', isCashier);
+            document.getElementById('gallery-nav').classList.toggle('active', !isCashier);
+            if (!isCashier) renderGallery();
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-list');
+            if (!container) return;
+            if (products.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-muted py-5">Belum ada produk.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            products.forEach(p => {
+                container.innerHTML += `
+          <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <article class="gallery-card h-100">
+              ${getProductPhoto(p)}
+              <div class="gallery-card-body">
+                <h6 class="mb-1">${escapeHtml(p.name)}</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                  <strong class="text-success">Rp ${p.price.toLocaleString('id-ID')}</strong>
+                  <span class="badge ${p.stock > 0 ? 'bg-secondary' : 'bg-danger'}">Stok ${p.stock}</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-success w-100 mt-3" onclick="showAppView('cashier'); addToCart(${p.row})" ${p.stock <= 0 ? 'disabled' : ''}>Tambah ke Keranjang</button>
+              </div>
+            </article>
           </div>
         `;
             });

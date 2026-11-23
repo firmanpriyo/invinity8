@@ -32,7 +32,8 @@ function getProducts() {
       name: data[i][2],
       unit: data[i][3],
       price: data[i][4],
-      stock: data[i][5]
+      stock: data[i][5],
+      image: String(data[i][6] || '').trim()
     });
   }
   return products;
